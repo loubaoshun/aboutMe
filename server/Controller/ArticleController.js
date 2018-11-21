@@ -29,14 +29,18 @@ class ArticleController {
     }
    async about(ctx){
         const res = await Article.about()
-       ctx.body = res
+        ctx.body = res
    }
    async  updataAbout(ctx){
-       // console.log(ctx.data);
        const content =  ctx.request.body.content
        const res = await Article.updataAbout(content)
        ctx.body = res
    }
+ async addRead(ctx){
+     const {name,author} = await ctx.request.body
+     const res = await Article.addRead(name,author)
+     ctx.body = res
+ }
 
 
 }

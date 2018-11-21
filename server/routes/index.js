@@ -32,8 +32,10 @@ router.post('/articles/update/:id',checkToken,ArticleController.updateArticle)
 router.delete('/articles/:id',checkToken,ArticleController.deleteArticle)
 //发布文章
 router.put('/articles/publish/:id',checkToken,ArticleController.publishArticle)
-//关于我
+//查询关于
 router.post('/articles/about',checkToken,ArticleController.about)
-//关于提交修改
+//更新关于
 router.post('/articles/updata/about',checkToken,ArticleController.updataAbout)
+//添加书级
+router.post('/read/addread',checkToken,ArticleController.addRead)
 export default router

@@ -19,11 +19,12 @@
 </template>
 
 <script>
+import request from '../utils/request'
 import HeadNav from "@/components/common/HeadNav";
 import Aside from "@/components/common/Aside";
 import 'simplemde/dist/simplemde.min.css'
 import SimpleMDE from 'simplemde'
-import request from '../utils/request'
+
 export default {
   name: "About",
   data() {
@@ -44,11 +45,11 @@ export default {
     request({
       url:'/articles/about',
       method:'post'
-    }).then(res=>{
-      this.simplemde.value(res[0].content)
-    }).catch(err=>{
-      console.log(err)
-    })
+  }).then(res=>{
+  this.simplemde.value(res[0].content)
+}).catch(err=>{
+  console.log(err)
+})
   },
   methods:{
       updateAbout(){
