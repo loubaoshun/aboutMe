@@ -58,22 +58,35 @@
   import Aside from "@/components/common/Aside";
   import Star from "@/components/common/Star"
   export default {
-    name: 'ReadList',
-    data() {
+    name:'ReadList',
+    data(){
       return {
-        isDiaShow: false,
-        isEditing: true,
-        score: 0,
-        books: [],
-
+        isDiaShow:false,
+        isEditing:true,
+        score:0,
+        books:[],
+        editingId:'',
+        editingIndex:''
       }
     },
-    components: {
+    components:{
       HeadNav,
       Aside,
       Star,
     },
-    methods: {
+    created(){
+      request({
+        url:"/read/getread",
+        method:"post"
+      }).then(res=>{
+        // console.log(res)
+        this.books = res
+        // console.log(this.books)
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+    methods:{
       chooseScore({evt,width}){
         // console.log(evt,width)
         const offsetX = evt.offsetX
@@ -83,75 +96,122 @@
           score = 5
         }
         this.score = score
+        // console.log(this.score)
       },
-        // 创建新书
-        confirmChange() {
-          if (!this.isEditing) {
-            const name = document.getElementById('name').value
-            const author = document.querySelector('#author').value
-            console.log(name, author)
-            const score = this.score
-            if (name && author) {
-              request({
-                url: "/read/addread",
-                method: 'post',
-                data: {
-                  name,
-                  author,
-                  score
-                }
-              }).then(res => {
-                const id = res.insertId
-                const book = {
-                  id,
-                  name,
-                  author,
-                  score
-                }
-                this.books.push(book)
-                this.isDiaShow = false
-              }).catch(err => {
-                console.log(err)
-              })
-            }
-          } else {
-            console.log('输入的信息不正确！')
+      // 创建新书
+      confirmChange(){
+        if(!this.isEditing){
+          const name = document.getElementById('name').value
+          const author = document.querySelector('#author').value
+          // console.log(name,author)
+          const score = this.score
+          if(name&&author){
+            request({
+              url:"/read/addread",
+              method:'post',
+              data:{
+                name,
+                author,
+                score
+              }
+            }).then(res=>{
+              console.log(res)
+              const id = res.insertId
+              const book = {
+                id,
+                name,
+                author,
+                score
+              }
+              this.books.push(book)
+              this.isDiaShow = false
+            }).catch(err=>{
+              console.log(err)
+            })
+          }else{
+            alert('请填写全部内容')
           }
-
-
-        },
-        //取消
-        cancel() {
-          this.isDiaShow = false
-
-        },
-        addBook(){
-          this.isDiaShow = true
-          this.isEditing = false
-          document.getElementById('name').value = ''
-          document.getElementById('author').value = ''
-        },
-        hideDialog(evt) {
-          console.log(evt)
-        },
-        created(){
-          //页面加载完毕后
-          request({
-            url: "/read/getread",
-            method: "post"
-          }).then(res => {
-            console.log(res)
-            this.books = res
-            console.log(this.books)
-          }).catch(err => {
-            console.log(err)
-          })
+        }else{
+          const name = document.getElementById('name').value
+          const author = document.querySelector('#author').value
+          const score = this.score
+          const id = this.editingId
+          if(name&&author){
+            request({
+              url:"/read/updateread",
+              method:'post',
+              data:{
+                id,
+                name,
+                author,
+                score
+              }
+            }).then(res=>{
+              console.log(res)
+              const id = res.insertId
+              const book = {
+                id,
+                name,
+                author,
+                score
+              }
+              this.books.splice(this.editingIndex, 1, {id, name, author, score})
+              this.isDiaShow = false
+            }).catch(err=>{
+              console.log(err)
+            })
+          }else{
+            alert('请填写全部内容')
+          }
         }
       },
-
+      cancel(){
+        this.score = 0
+        document.getElementById('name').value = ''
+        document.getElementById('author').value = ''
+        this.isDiaShow = false
+      },
+      addBook(){
+        this.isDiaShow = true
+        this.isEditing = false
+        this.score = 0
+        document.getElementById('name').value = ''
+        document.getElementById('author').value = ''
+      },
+      hideDialog(evt){
+        // console.log(evt.target.className )
+        if (evt.target.className === 'dialog-container' || evt.target.id === 'cancel') {
+          this.isDiaShow = false
+        }
+      },
+      editBook(index){
+        this.isDiaShow = true
+        this.isEditing = true
+        this.score = this.books[index].score
+        document.getElementById('name').value = this.books[index].name
+        document.getElementById('author').value = this.books[index].author
+        this.editingId = this.books[index].id
+        this.editingIndex = index
+        // console.log( this.editingId,this.editingIndex)
+      },
+      deleteBook(index){
+        const id = this.books[index].id
+        // console.log(id)
+        request({
+          url:'/read/delread',
+          method:'post',
+          data:{
+            id
+          }
+        }).then(res=>{
+          this.books.splice(index,1)
+        }).catch(err=>{
+          console.log(err)
+        })
+      }
+    }
   }
 </script>
-
 <style type="text/scss" lang="scss" scoped>
   @import "../assets/style/variable";
   main {

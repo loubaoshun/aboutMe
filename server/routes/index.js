@@ -38,6 +38,10 @@ router.post('/articles/about',checkToken,ArticleController.about)
 router.post('/articles/updata/about',checkToken,ArticleController.updataAbout)
 //添加书籍
 router.post('/read/addread',checkToken,ArticleController.addRead)
-//钩子页面加载完成
-router.get('/read/getread',checkToken,ArticleController.getRead)
+//钩子页面加载完成获取书籍信息
+router.post('/read/getread',checkToken,ArticleController.getRead)
+//更新书籍编辑
+router.post('/read/updataread',checkToken,ArticleController.updataRead)
+//删除书籍
+router.post('/read/delread',checkToken,ArticleController.delRead)
 export default router
