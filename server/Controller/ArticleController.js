@@ -32,9 +32,10 @@ class ArticleController {
        ctx.body = res
    }
    async  updataAbout(ctx){
-        const content = cxt.body.content
-        const res = await Article.updataAbout()
-        ctx.body = res
+       console.log(ctx.data);
+       const content =  ctx.content
+       const res = await Article.updataAbout(content)
+       ctx.body = res
    }
 
 
