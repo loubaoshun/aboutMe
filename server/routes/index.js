@@ -36,6 +36,8 @@ router.put('/articles/publish/:id',checkToken,ArticleController.publishArticle)
 router.post('/articles/about',checkToken,ArticleController.about)
 //更新关于
 router.post('/articles/updata/about',checkToken,ArticleController.updataAbout)
-//添加书级
+//添加书籍
 router.post('/read/addread',checkToken,ArticleController.addRead)
+//钩子页面加载完成
+router.get('/read/getread',checkToken,ArticleController.getRead)
 export default router

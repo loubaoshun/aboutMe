@@ -12,7 +12,7 @@
             <input type="text" id="author" placeholder="输入作者...">
             <section class="btn-container">
               <button id="confirm" class="not-del" @click="confirmChange">确认</button>
-              <button id="cancel" class="delete">取消</button>
+              <button id="cancel" class="delete" @click="cancel">取消</button>
             </section>
           </section>
         </div>
@@ -58,55 +58,97 @@
   import Aside from "@/components/common/Aside";
   import Star from "@/components/common/Star"
   export default {
-    name:'ReadList',
-    data(){
+    name: 'ReadList',
+    data() {
       return {
-        isDiaShow:false,
-        isEditing:true,
-        score:0,
-        books:[]
+        isDiaShow: false,
+        isEditing: true,
+        score: 0,
+        books: [],
+
       }
     },
-    components:{
+    components: {
       HeadNav,
       Aside,
       Star,
     },
-    methods:{
-      chooseScore(evt, width){
-
+    methods: {
+      chooseScore({evt,width}){
+        // console.log(evt,width)
+        const offsetX = evt.offsetX
+        // toFixed返回的是字符串...
+        let score = (parseInt(evt.target.dataset.index, 10) + parseFloat(offsetX / width)).toFixed(2)
+        if (score > 4.9) {
+          score = 5
+        }
+        this.score = score
       },
-      // 创建新书
-      confirmChange(){
-        if(!this.isEditing){
-          const name = document.getElementById('name').value
-          const author = document.querySelector('#author').value
-          const score = this.score
-          console.log(name,author)
-          if(name&&author){
-            request({
-              url:"/read/addread",
-              method:'post',
-              data:{
-                name,
-                author,
-                score
-              }
-            })
+        // 创建新书
+        confirmChange() {
+          if (!this.isEditing) {
+            const name = document.getElementById('name').value
+            const author = document.querySelector('#author').value
+            console.log(name, author)
+            const score = this.score
+            if (name && author) {
+              request({
+                url: "/read/addread",
+                method: 'post',
+                data: {
+                  name,
+                  author,
+                  score
+                }
+              }).then(res => {
+                const id = res.insertId
+                const book = {
+                  id,
+                  name,
+                  author,
+                  score
+                }
+                this.books.push(book)
+                this.isDiaShow = false
+              }).catch(err => {
+                console.log(err)
+              })
+            }
+          } else {
+            console.log('输入的信息不正确！')
           }
+
+
+        },
+        //取消
+        cancel() {
+          this.isDiaShow = false
+
+        },
+        addBook(){
+          this.isDiaShow = true
+          this.isEditing = false
+          document.getElementById('name').value = ''
+          document.getElementById('author').value = ''
+        },
+        hideDialog(evt) {
+          console.log(evt)
+        },
+        created(){
+          //页面加载完毕后
+          request({
+            url: "/read/getread",
+            method: "post"
+          }).then(res => {
+            console.log(res)
+            this.books = res
+            console.log(this.books)
+          }).catch(err => {
+            console.log(err)
+          })
         }
       },
-      addBook(){
-        this.isDiaShow = true
-        this.isEditing = false
-        this.score = 0
-        document.getElementById('name').value = ''
-        document.getElementById('author').value = ''
-      },
-      hideDialog(){
 
-      }
-    }
   }
 </script>
 

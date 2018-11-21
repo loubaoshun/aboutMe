@@ -37,10 +37,14 @@ class ArticleController {
        ctx.body = res
    }
  async addRead(ctx){
-     const {name,author} = await ctx.request.body
-     const res = await Article.addRead(name,author)
+     const {name,author,score} = await ctx.request.body
+     const res = await Article.addRead(name,author,score)
      ctx.body = res
- }
+    }
+    async getRead(ctx){
+        const res = await Article.getRead()
+        ctx.body = res
+    }
 
 
 }
