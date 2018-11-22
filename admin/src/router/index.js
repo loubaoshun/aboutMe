@@ -10,6 +10,8 @@ import List from '@/components/List'
 import About from '@/components/About'
 //阅读列表组件
 import  readList from '@/components/readList'
+//引入标签组件
+import tags from '@/components/tags'
 export default new Router({
   routes: [
     {
@@ -29,7 +31,10 @@ export default new Router({
       path:'/about',
       component:About
     },
-
+    {
+      path:'/tags',
+      component:tags
+    },
     {path:'*',redirect:'/login'}
   ]
 })
