@@ -1,10 +1,16 @@
 <template>
-
+  <section>
+    <head-nav></head-nav>
+  </section>
 </template>
 
 <script>
+  import headNav from '../components/common/headNav'
     export default {
-        name: "content"
+        name: "content",
+      components:{
+        headNav,
+      },
     }
 </script>
 

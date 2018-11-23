@@ -4,7 +4,7 @@
       <h2>lbs个人博客</h2>
       <nav id="nav">
         <ul>
-          <router-link to="/" ><li id="list">网站首页</li></router-link>
+          <router-link to="/home" ><li>网站首页</li></router-link>
           <router-link to="/photo" ><li>我的相册</li></router-link>
           <router-link to="/aboutme"><li>关于我</li></router-link>
           <router-link to="leavemessage"> <li>留言</li></router-link>
@@ -66,5 +66,10 @@
     color: #fff;
     border-radius: 0 20px;
     text-shadow: none;
+  }
+  .router-link-active li {
+    color: #fff;
+    background: #C93282;
+    border-radius: 0 20px;
   }
 </style>
